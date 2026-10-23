@@ -10,6 +10,7 @@ const stories = defineCollection({
     genre: z.string(),
     tags: z.array(z.string()).default([]),
     pubDate: z.coerce.date(),
+    written: z.coerce.date().optional(),
     draft: z.boolean().default(false),
   }),
 });

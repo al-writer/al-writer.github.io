@@ -321,6 +321,33 @@ h3 {
   content: '❦';
   color: var(--accent);
 }
+.story-stats {
+  max-width: var(--measure);
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.story-stats dl {
+  display: grid;
+  gap: 0.2rem;
+  max-width: 16rem;
+  margin: 0;
+}
+.story-stats dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.story-stats dd {
+  margin: 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.story-stats p {
+  margin: 0.75rem 0 0;
+}
 .progress {
   position: fixed;
   inset: 0 0 auto 0;
