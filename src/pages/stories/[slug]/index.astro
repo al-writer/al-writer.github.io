@@ -33,7 +33,12 @@ const statRows = [
 ---
 
 <Base title={title} description={description} type="article" publishedTime={pubDate}>
-  <div class="progress" id="progress" aria-hidden="true"></div>
+  <button type="button" class="read-bar" id="read-bar" tabindex="-1" data-pagefind-ignore>
+    <span class="read-bar-fill" id="read-fill" aria-hidden="true"></span>
+    <span class="read-bar-title">{title}</span>
+    <span class="read-bar-pct" id="read-pct" aria-hidden="true">0%</span>
+    <span class="visually-hidden">— наверх</span>
+  </button>
 
   <article data-pagefind-body data-story={story.id}>
     <header class="story-header">
@@ -44,7 +49,7 @@ const statRows = [
         <span aria-hidden="true">·</span>
         <span>{readingMinutes(story.body)} мин чтения</span>
       </p>
-      <h1 data-pagefind-meta="title">{title}</h1>
+      <h1 id="story-title" data-pagefind-meta="title">{title}</h1>
       <div class="reader-tools" role="group" aria-label="Настройки чтения" data-pagefind-ignore>
         <button type="button" id="font-down" aria-label="Уменьшить шрифт">A−</button>
         <button type="button" id="font-up" aria-label="Увеличить шрифт">A+</button>
@@ -141,7 +146,9 @@ const statRows = [
     document.getElementById('font-down')?.addEventListener('click', () => applyScale(scale - 0.1));
 
     // Reading progress + remembered paragraph
-    const bar = document.getElementById('progress')!;
+    const bar = document.getElementById('read-bar')!;
+    const fill = document.getElementById('read-fill')!;
+    const pct = document.getElementById('read-pct')!;
     const id = document.querySelector<HTMLElement>('[data-story]')!.dataset.story!;
     const key = `para:${id}`;
     const paras = [...document.querySelectorAll<HTMLElement>('.prose > p')];
@@ -164,7 +171,8 @@ const statRows = [
     const progress = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
-      bar.style.transform = `scaleX(${ratio})`;
+      fill.style.transform = `scaleX(${ratio})`;
+      pct.textContent = `${Math.round(ratio * 100)}%`;
       if (ratio >= 0.98) store.set(key, '0');
       else if (ratio > 0.02) store.set(key, String(currentPara()));
       ticking = false;
@@ -196,5 +204,13 @@ const statRows = [
       });
     }
     progress();
+
+    // The title bar slides in once the big heading has scrolled out of view.
+    new IntersectionObserver(([entry]) => {
+      const show = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      bar.classList.toggle('show', show);
+      bar.tabIndex = show ? 0 : -1;
+    }).observe(document.getElementById('story-title')!);
+    bar.addEventListener('click', () => scrollTo({ top: 0 }));
   </script>
 </Base>

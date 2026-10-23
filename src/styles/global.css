@@ -382,14 +382,57 @@ h3 {
   margin-top: 2.5rem;
   color: var(--muted);
 }
-.progress {
+.read-bar {
   position: fixed;
   inset: 0 0 auto 0;
-  height: 3px;
-  background: var(--accent);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 2.75rem;
+  padding: 0 max(1rem, calc((100% - 46rem) / 2));
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0.2s;
+}
+.read-bar.show {
+  transform: none;
+  visibility: visible;
+}
+.read-bar-fill {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg));
   transform-origin: left;
   transform: scaleX(0);
-  z-index: 20;
+}
+.read-bar-title,
+.read-bar-pct {
+  position: relative;
+}
+.read-bar-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.read-bar-pct {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
 .story-nav {
   display: flex;
@@ -422,7 +465,7 @@ h3 {
   display: block;
 }
 .prose > p {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 4rem;
 }
 .resume-mark {
   animation: resume-mark 2.4s ease-out;
@@ -460,7 +503,7 @@ h3 {
   .site-header,
   .site-footer,
   .reader-tools,
-  .progress,
+  .read-bar,
   .story-nav,
   .resume {
     display: none !important;
@@ -469,4 +512,13 @@ h3 {
     background: #fff;
     color: #000;
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
