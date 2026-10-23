@@ -1,0 +1,143 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { formatDate, getStories, readingMinutes, slugify } from '../../../lib/stories';
+
+export async function getStaticPaths() {
+  const stories = await getStories();
+  return stories.map((story, i) => ({
+    params: { slug: story.id },
+    props: { story, newer: stories[i - 1], older: stories[i + 1] },
+  }));
+}
+
+const { story, newer, older } = Astro.props;
+const { title, description, genre, tags, pubDate } = story.data;
+const { Content } = await render(story);
+---
+
+<Base title={title} description={description} type="article" publishedTime={pubDate}>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <article data-pagefind-body data-story={story.id}>
+    <header class="story-header">
+      <p class="meta">
+        <a href={`/genres/${slugify(genre)}/`}>{genre}</a>
+        <span aria-hidden="true">·</span>
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{readingMinutes(story.body)} мин чтения</span>
+      </p>
+      <h1 data-pagefind-meta="title">{title}</h1>
+      <div class="reader-tools" role="group" aria-label="Настройки чтения" data-pagefind-ignore>
+        <button type="button" id="font-down" aria-label="Уменьшить шрифт">A−</button>
+        <button type="button" id="font-up" aria-label="Увеличить шрифт">A+</button>
+      </div>
+    </header>
+
+    <p class="resume" id="resume" data-pagefind-ignore>
+      Вы остановились на прошлом чтении.
+      <button type="button" id="resume-go">Продолжить</button>
+    </p>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+  </article>
+
+  <ul class="chips" style="margin-top: 2rem" aria-label="Теги" data-pagefind-ignore>
+    {
+      tags.map((t) => (
+        <li>
+          <a class="chip" href={`/tags/${slugify(t)}/`}>
+            #{t}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <nav class="story-nav" aria-label="Другие рассказы" data-pagefind-ignore>
+    {
+      older && (
+        <a class="prev" href={`/stories/${older.id}/`} rel="prev">
+          <small>← Раньше</small>
+          {older.data.title}
+        </a>
+      )
+    }
+    {
+      newer && (
+        <a class="next" href={`/stories/${newer.id}/`} rel="next">
+          <small>Позже →</small>
+          {newer.data.title}
+        </a>
+      )
+    }
+  </nav>
+
+  <script>
+    const root = document.documentElement;
+    const store = {
+      get: (k: string) => {
+        try {
+          return localStorage.getItem(k);
+        } catch {
+          return null;
+        }
+      },
+      set: (k: string, v: string) => {
+        try {
+          localStorage.setItem(k, v);
+        } catch {}
+      },
+    };
+
+    // Font size
+    let scale = parseFloat(store.get('font-scale') ?? '1') || 1;
+    const applyScale = (s: number) => {
+      scale = Math.min(1.6, Math.max(0.8, Math.round(s * 100) / 100));
+      root.style.setProperty('--font-scale', String(scale));
+      store.set('font-scale', String(scale));
+    };
+    document.getElementById('font-up')?.addEventListener('click', () => applyScale(scale + 0.1));
+    document.getElementById('font-down')?.addEventListener('click', () => applyScale(scale - 0.1));
+
+    // Reading progress + remembered position
+    const bar = document.getElementById('progress')!;
+    const id = document.querySelector<HTMLElement>('[data-story]')!.dataset.story!;
+    const key = `pos:${id}`;
+    let ticking = false;
+    const progress = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
+      bar.style.transform = `scaleX(${ratio})`;
+      if (ratio > 0.02 && ratio < 0.98) store.set(key, ratio.toFixed(4));
+      else if (ratio >= 0.98) store.set(key, '0');
+      ticking = false;
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(progress);
+        }
+      },
+      { passive: true },
+    );
+    progress();
+
+    const saved = parseFloat(store.get(key) ?? '0');
+    if (saved > 0.02) {
+      const box = document.getElementById('resume')!;
+      box.classList.add('show');
+      document.getElementById('resume-go')!.addEventListener('click', () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        scrollTo({ top: max * saved });
+        box.classList.remove('show');
+      });
+    }
+  </script>
+</Base>

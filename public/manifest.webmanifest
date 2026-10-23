@@ -1,0 +1,16 @@
+{
+  "name": "Рассказы Al Writer",
+  "short_name": "Al Writer",
+  "description": "Авторские фэнтези-рассказы",
+  "lang": "ru",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf7f0",
+  "theme_color": "#8a4b12",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

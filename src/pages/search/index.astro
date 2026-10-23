@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Поиск" description="Поиск по тексту всех рассказов.">
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <h1 class="page-title">Поиск</h1>
+  <p class="lead">Ищите по названиям и тексту рассказов.</p>
+  <div id="search" data-pagefind-ignore></div>
+  <noscript><p>Для поиска нужен JavaScript.</p></noscript>
+
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (typeof PagefindUI === 'undefined') {
+        document.getElementById('search').textContent =
+          'Поисковый индекс создаётся при сборке (npm run build).';
+        return;
+      }
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        translations: {
+          placeholder: 'Поиск по рассказам',
+          clear_search: 'Очистить',
+          load_more: 'Показать ещё',
+          search_label: 'Поиск',
+          filters_label: 'Фильтры',
+          zero_results: 'Ничего не найдено по запросу [SEARCH_TERM]',
+          many_results: 'Найдено: [COUNT] по запросу [SEARCH_TERM]',
+          one_result: 'Найден 1 результат по запросу [SEARCH_TERM]',
+        },
+      });
+      var q = new URLSearchParams(location.search).get('q');
+      if (q) document.querySelector('#search input').value = q;
+    });
+  </script>
+</Base>

@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import StoryCard from '../components/StoryCard.astro';
+import { getGenres, getStories } from '../lib/stories';
+
+const stories = await getStories();
+const genres = getGenres(stories);
+---
+
+<Base>
+  <h1 class="page-title">Рассказы</h1>
+  <p class="lead">Авторские фэнтези-истории: легенды, артефакты и забытые земли.</p>
+
+  <ul class="chips" aria-label="Жанры">
+    {
+      genres.map((g) => (
+        <li>
+          <a class="chip" href={`/genres/${g.slug}/`}>
+            {g.name} <small>{g.stories.length}</small>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="card-list">
+    {stories.map((story) => <StoryCard story={story} />)}
+  </div>
+</Base>
