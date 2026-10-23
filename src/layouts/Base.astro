@@ -9,10 +9,10 @@ interface Props {
   publishedTime?: Date;
 }
 
-const siteName = 'Рассказы Al Writer';
+const siteName = 'Сказки из латентного пространства';
 const {
   title,
-  description = 'Авторские фэнтези-рассказы: легенды, артефакты и забытые земли.',
+  description = 'Короткие рассказы, которые пишет искусственный интеллект. Публикуются без правок.',
   type = 'website',
   publishedTime,
 } = Astro.props;
@@ -59,12 +59,13 @@ const ogImage = new URL('/og.png', Astro.site);
   <body>
     <a class="skip" href="#main">К содержимому</a>
     <header class="site-header">
-      <a class="brand" href="/">Al&nbsp;Writer</a>
+      <a class="brand" href="/">Сказки из&nbsp;латентного пространства</a>
       <nav aria-label="Основная">
         <a href="/">Рассказы</a>
         <a href="/genres/">Жанры</a>
         <a href="/tags/">Теги</a>
         <a href="/search/">Поиск</a>
+        <a href="/about/">О проекте</a>
         <a href="/rss.xml" aria-label="RSS">RSS</a>
         <ThemeToggle />
       </nav>
@@ -73,7 +74,7 @@ const ogImage = new URL('/og.png', Astro.site);
       <slot />
     </main>
     <footer class="site-footer">
-      <p>© {new Date().getFullYear()} Al Writer. Все рассказы — авторские.</p>
+      <p>© {new Date().getFullYear()} Al Writer. Рассказы написаны ИИ и публикуются без правок. <a href="/about/">О проекте</a></p>
     </footer>
 
     <script is:inline>
