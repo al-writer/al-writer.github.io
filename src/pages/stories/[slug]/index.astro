@@ -52,7 +52,7 @@ const statRows = [
     </header>
 
     <p class="resume" id="resume" data-pagefind-ignore>
-      Вы остановились на прошлом чтении.
+      Вы остановились на абзаце <span id="resume-at"></span>.
       <button type="button" id="resume-go">Продолжить</button>
     </p>
 
@@ -140,17 +140,33 @@ const statRows = [
     document.getElementById('font-up')?.addEventListener('click', () => applyScale(scale + 0.1));
     document.getElementById('font-down')?.addEventListener('click', () => applyScale(scale - 0.1));
 
-    // Reading progress + remembered position
+    // Reading progress + remembered paragraph
     const bar = document.getElementById('progress')!;
     const id = document.querySelector<HTMLElement>('[data-story]')!.dataset.story!;
-    const key = `pos:${id}`;
+    const key = `para:${id}`;
+    const paras = [...document.querySelectorAll<HTMLElement>('.prose > p')];
+    try {
+      localStorage.removeItem(`pos:${id}`); // old scroll-ratio format
+    } catch {}
+
+    // The paragraph being read: the last one whose top has passed the upper third of the screen.
+    const currentPara = () => {
+      const line = innerHeight / 3;
+      let current = 0;
+      for (const [i, p] of paras.entries()) {
+        if (p.getBoundingClientRect().top > line) break;
+        current = i;
+      }
+      return current;
+    };
+
     let ticking = false;
     const progress = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
       bar.style.transform = `scaleX(${ratio})`;
-      if (ratio > 0.02 && ratio < 0.98) store.set(key, ratio.toFixed(4));
-      else if (ratio >= 0.98) store.set(key, '0');
+      if (ratio >= 0.98) store.set(key, '0');
+      else if (ratio > 0.02) store.set(key, String(currentPara()));
       ticking = false;
     };
     addEventListener(
@@ -163,17 +179,22 @@ const statRows = [
       },
       { passive: true },
     );
-    progress();
 
-    const saved = parseFloat(store.get(key) ?? '0');
-    if (saved > 0.02) {
+    const saved = parseInt(store.get(key) ?? '0', 10);
+    const target = paras[saved];
+    if (saved > 0 && target) {
       const box = document.getElementById('resume')!;
+      document.getElementById('resume-at')!.textContent = `${saved + 1} из ${paras.length}`;
       box.classList.add('show');
       document.getElementById('resume-go')!.addEventListener('click', () => {
-        const max = document.documentElement.scrollHeight - innerHeight;
-        scrollTo({ top: max * saved });
         box.classList.remove('show');
+        target.scrollIntoView({ block: 'start' });
+        target.classList.add('resume-mark');
+        target.addEventListener('animationend', () => target.classList.remove('resume-mark'), {
+          once: true,
+        });
       });
     }
+    progress();
   </script>
 </Base>
