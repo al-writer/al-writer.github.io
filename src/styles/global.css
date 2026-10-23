@@ -387,6 +387,20 @@ h3 {
 .resume.show {
   display: block;
 }
+.prose > p {
+  scroll-margin-top: 1.5rem;
+}
+.resume-mark {
+  animation: resume-mark 2.4s ease-out;
+}
+@keyframes resume-mark {
+  from {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
 .resume button {
   margin-left: 0.5rem;
   background: none;
