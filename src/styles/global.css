@@ -349,6 +349,21 @@ h3 {
 .story-stats p {
   margin: 0.75rem 0 0;
 }
+.story-stats p + p {
+  margin-top: 0.25rem;
+}
+.story-prompt {
+  margin: 1rem 0 0;
+}
+.story-prompt blockquote {
+  margin: 0.35rem 0 0;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--surface);
+  color: var(--text);
+  white-space: pre-line;
+}
 /* About */
 .about-facts {
   display: flex;

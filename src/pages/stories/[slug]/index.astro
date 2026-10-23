@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 const { story, newer, older } = Astro.props;
-const { title, description, genre, tags, pubDate, written } = story.data;
+const { title, description, genre, tags, pubDate, written, model, prompt } = story.data;
 const { Content } = await render(story);
 const stats = textStats(story.body);
 const num = new Intl.NumberFormat('ru-RU');
@@ -65,7 +65,7 @@ const statRows = [
       <Content />
     </div>
 
-    <footer class="story-stats" aria-label="Статистика текста" data-pagefind-ignore>
+    <footer class="story-stats" aria-label="О тексте" data-pagefind-ignore>
       <dl>
         {
           statRows.map(([label, value]) => (
@@ -81,6 +81,15 @@ const statRows = [
           <p>
             Написан <time datetime={written.toISOString()}>{formatDateTime(written)}</time>
           </p>
+        )
+      }
+      {model && <p>Модель: {model}</p>}
+      {
+        prompt && (
+          <figure class="story-prompt">
+            <figcaption>Запрос</figcaption>
+            <blockquote>{prompt}</blockquote>
+          </figure>
         )
       }
     </footer>
