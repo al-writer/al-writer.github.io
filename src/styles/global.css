@@ -111,7 +111,8 @@ a {
 }
 .brand {
   font-family: var(--serif);
-  font-size: 1.35rem;
+  font-size: clamp(1.1rem, 4vw, 1.35rem);
+  line-height: 1.2;
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
@@ -347,6 +348,39 @@ h3 {
 }
 .story-stats p {
   margin: 0.75rem 0 0;
+}
+/* About */
+.about-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  margin: 0 0 2.5rem;
+}
+.about-facts dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.about-facts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.prose ol {
+  padding-left: 1.4em;
+  margin: 0 0 1.1em;
+}
+.prose li {
+  margin-bottom: 0.5em;
+}
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  margin-top: 2.5rem;
+  color: var(--muted);
 }
 .progress {
   position: fixed;

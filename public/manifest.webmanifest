@@ -1,7 +1,7 @@
 {
-  "name": "Рассказы Al Writer",
-  "short_name": "Al Writer",
-  "description": "Авторские фэнтези-рассказы",
+  "name": "Сказки из латентного пространства",
+  "short_name": "Латентные сказки",
+  "description": "Короткие рассказы, которые пишет ИИ",
   "lang": "ru",
   "start_url": "/",
   "scope": "/",

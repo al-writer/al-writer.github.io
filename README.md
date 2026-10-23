@@ -1,6 +1,8 @@
-# Рассказы Al Writer
+# Сказки из латентного пространства
 
-Сайт с авторскими рассказами на [Astro](https://astro.build) + Content Collections. Публикуется на GitHub Pages: https://al-writer.github.io
+Короткие рассказы, которые пишет искусственный интеллект, — без правок, как есть. О замысле — на странице «О проекте» (`src/pages/about.astro`).
+
+Сайт на [Astro](https://astro.build) + Content Collections. Публикуется на GitHub Pages: https://al-writer.github.io
 
 ## Возможности
 - Рассказы — Markdown-файлы в `src/content/stories/` с типизированным frontmatter

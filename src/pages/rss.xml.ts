@@ -5,8 +5,8 @@ import { getStories } from '../lib/stories';
 export async function GET(context: APIContext) {
   const stories = await getStories();
   return rss({
-    title: 'Рассказы Al Writer',
-    description: 'Авторские фэнтези-рассказы: легенды, артефакты и забытые земли.',
+    title: 'Сказки из латентного пространства',
+    description: 'Короткие рассказы, которые пишет искусственный интеллект. Публикуются без правок.',
     site: context.site!,
     customData: '<language>ru</language>',
     items: stories.map((story) => ({
