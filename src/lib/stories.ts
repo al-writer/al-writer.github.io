@@ -34,6 +34,38 @@ export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('ru-RU', { dateStyle: 'long', timeZone: 'UTC' }).format(date);
 }
 
+export function formatDateTime(date: Date): string {
+  return new Intl.DateTimeFormat('ru-RU', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
+export interface TextStats {
+  paragraphs: number;
+  sentences: number;
+  words: number;
+  chars: number;
+  charsWithSpaces: number;
+}
+
+// Counts the story text only: Markdown dividers (---, ***) are skipped, line breaks are not characters.
+export function textStats(body: string | undefined): TextStats {
+  const paragraphs = (body ?? '')
+    .split(/\n\s*\n/)
+    .map((p) => p.replace(/\s+/g, ' ').trim())
+    .filter((p) => p && !/^([-*_]\s*){3,}$/.test(p));
+  const text = paragraphs.join(' ');
+  return {
+    paragraphs: paragraphs.length,
+    sentences: text.match(/[.!?…]+["»”]*(?=\s|$)/g)?.length ?? 0,
+    words: text.split(' ').filter((w) => /[\p{L}\p{N}]/u.test(w)).length,
+    chars: text.replace(/\s/g, '').length,
+    charsWithSpaces: text.length,
+  };
+}
+
 export interface Term {
   name: string;
   slug: string;

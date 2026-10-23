@@ -1,7 +1,14 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
-import { formatDate, getStories, readingMinutes, slugify } from '../../../lib/stories';
+import {
+  formatDate,
+  formatDateTime,
+  getStories,
+  readingMinutes,
+  slugify,
+  textStats,
+} from '../../../lib/stories';
 
 export async function getStaticPaths() {
   const stories = await getStories();
@@ -12,8 +19,17 @@ export async function getStaticPaths() {
 }
 
 const { story, newer, older } = Astro.props;
-const { title, description, genre, tags, pubDate } = story.data;
+const { title, description, genre, tags, pubDate, written } = story.data;
 const { Content } = await render(story);
+const stats = textStats(story.body);
+const num = new Intl.NumberFormat('ru-RU');
+const statRows = [
+  ['Абзацев', stats.paragraphs],
+  ['Предложений', stats.sentences],
+  ['Слов', stats.words],
+  ['Символов', stats.chars],
+  ['С пробелами', stats.charsWithSpaces],
+] as const;
 ---
 
 <Base title={title} description={description} type="article" publishedTime={pubDate}>
@@ -43,6 +59,26 @@ const { Content } = await render(story);
     <div class="prose">
       <Content />
     </div>
+
+    <footer class="story-stats" aria-label="Статистика текста" data-pagefind-ignore>
+      <dl>
+        {
+          statRows.map(([label, value]) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{num.format(value)}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      {
+        written && (
+          <p>
+            Написан <time datetime={written.toISOString()}>{formatDateTime(written)}</time>
+          </p>
+        )
+      }
+    </footer>
 
   </article>
 
