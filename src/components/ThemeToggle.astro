@@ -1,0 +1,21 @@
+<button type="button" id="theme-toggle" class="icon-btn" aria-label="Переключить тему">
+  <svg class="sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <svg class="moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" fill="currentColor"/></svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const dark =
+      root.dataset.theme === 'dark' ||
+      (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    const next = dark ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', next === 'dark' ? '#14130f' : '#faf7f0');
+  });
+</script>

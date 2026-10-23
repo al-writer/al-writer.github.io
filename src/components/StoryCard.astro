@@ -1,0 +1,21 @@
+---
+import { formatDate, readingMinutes, slugify, type Story } from '../lib/stories';
+
+interface Props {
+  story: Story;
+}
+const { story } = Astro.props;
+const { title, description, genre, pubDate } = story.data;
+---
+
+<article class="card">
+  <p class="meta">
+    <a class="genre" href={`/genres/${slugify(genre)}/`}>{genre}</a>
+    <span aria-hidden="true">·</span>
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+    <span aria-hidden="true">·</span>
+    <span>{readingMinutes(story.body)} мин</span>
+  </p>
+  <h2><a href={`/stories/${story.id}/`}>{title}</a></h2>
+  <p class="desc">{description}</p>
+</article>

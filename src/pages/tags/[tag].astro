@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import { getStories, getTags } from '../../lib/stories';
+
+export async function getStaticPaths() {
+  return getTags(await getStories()).map((term) => ({ params: { tag: term.slug }, props: { term } }));
+}
+
+const { term } = Astro.props;
+---
+
+<Base title={`#${term.name}`} description={`Рассказы с тегом «${term.name}».`}>
+  <h1 class="page-title">#{term.name}</h1>
+  <p class="lead">Рассказов: {term.stories.length}</p>
+  <div class="card-list">{term.stories.map((story) => <StoryCard story={story} />)}</div>
+</Base>

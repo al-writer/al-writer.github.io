@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getGenres, getStories } from '../../lib/stories';
+
+const genres = getGenres(await getStories());
+---
+
+<Base title="Жанры" description="Рассказы по жанрам.">
+  <h1 class="page-title">Жанры</h1>
+  <ul class="chips">
+    {
+      genres.map((g) => (
+        <li>
+          <a class="chip" href={`/genres/${g.slug}/`}>
+            {g.name} <small>{g.stories.length}</small>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

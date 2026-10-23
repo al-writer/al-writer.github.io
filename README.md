@@ -1,0 +1,38 @@
+# Рассказы Al Writer
+
+Сайт с авторскими рассказами на [Astro](https://astro.build) + Content Collections. Публикуется на GitHub Pages: https://al-writer.github.io
+
+## Возможности
+- Рассказы — Markdown-файлы в `src/content/stories/` с типизированным frontmatter
+- Светлая/тёмная тема, режим чтения (размер шрифта, индикатор прогресса, возврат к месту чтения)
+- Жанры и теги, полнотекстовый поиск ([Pagefind](https://pagefind.app))
+- RSS, sitemap, Open Graph, PWA с офлайн-чтением
+
+## Добавить рассказ
+Создайте `src/content/stories/<slug>.md`:
+
+```md
+---
+title: "Название"
+description: "Короткое описание для списка и соцсетей"
+genre: "Фэнтези"
+tags: ["магия", "легенда"]
+pubDate: 2025-06-01
+draft: false
+---
+
+Текст рассказа…
+```
+
+Имя файла становится адресом: `/stories/<slug>/`. Список, страницы жанров и тегов, RSS и поиск обновятся при сборке автоматически.
+
+## Разработка
+```sh
+npm install
+npm run dev      # локальный сервер (поиск работает только после build)
+npm run build    # проверка типов + сборка + индекс поиска
+npm run preview  # просмотр собранного сайта
+```
+
+## Деплой
+В настройках репозитория: **Settings → Pages → Source: GitHub Actions**. Далее каждый push в `main` собирает и публикует сайт (`.github/workflows/deploy.yml`).

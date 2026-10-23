@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getStories, getTags } from '../../lib/stories';
+
+const tags = getTags(await getStories());
+---
+
+<Base title="Теги" description="Рассказы по тегам.">
+  <h1 class="page-title">Теги</h1>
+  <ul class="chips">
+    {
+      tags.map((t) => (
+        <li>
+          <a class="chip" href={`/tags/${t.slug}/`}>
+            #{t.name} <small>{t.stories.length}</small>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>
